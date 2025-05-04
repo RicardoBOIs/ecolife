@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../auth_service.dart';
 import '../widgets/fancy_button.dart';
-import 'register_page.dart';
 import 'reset_page.dart';
 
 class RegisterPage extends StatefulWidget {
