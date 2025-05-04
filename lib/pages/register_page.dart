@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 decoration: const InputDecoration(
                     labelText: 'Email', prefixIcon: Icon(Icons.email)),
                 validator: (v) =>
-                v != null && v.contains('@') ? null : 'Email 格式不正确',
+                v != null && v.contains('@') ? null : 'Email format incorrect',
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -41,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     labelText: 'Password', prefixIcon: Icon(Icons.lock)),
                 obscureText: true,
                 validator: (v) =>
-                v != null && v.length >= 6 ? null : '至少 6 个字符',
+                v != null && v.length >= 6 ? null : 'At least 6 characters',
               ),
               const SizedBox(height: 24),
               _loading

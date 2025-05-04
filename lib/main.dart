@@ -21,10 +21,10 @@ class EcoApp extends StatelessWidget {
         colorSchemeSeed: Colors.green,
         useMaterial3: true,
       ),
-      // 👇 具名路由（named routes）
+
       routes: {
-        '/':      (_) => const LoginPage(),      // 默认显示登录
-        '/home':  (_) =>  TipsEducationScreen()  // 登录成功后跳这里
+        '/':      (_) => const LoginPage(),
+        '/home':  (_) =>  TipsEducationScreen()
       },
     );
   }
