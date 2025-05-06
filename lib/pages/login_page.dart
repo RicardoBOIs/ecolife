@@ -4,6 +4,8 @@ import '../widgets/fancy_button.dart';
 import 'register_page.dart';
 import 'reset_page.dart';
 
+const adminEmails = ['admin@example.com', 'johnleeyenhan@gmail.com'];
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   @override
@@ -52,15 +54,24 @@ class _LoginPageState extends State<LoginPage> {
                 onTap: () async {
                   if (!_form.currentState!.validate()) return;
                   setState(() => _loading = true);
+
                   try {
-                    await authService.value.signIn(email: _mail.text.trim(), password: _pwd.text);
-                    if (mounted) {
-                      Navigator.pushReplacementNamed(
-                          context, '/home');
-                    }
+                    await authService.value.signIn(
+                      email: _mail.text.trim(),
+                      password: _pwd.text,
+                    );
+
+                    if (!mounted) return;
+                    final email = _mail.text.trim();
+                    final route = adminEmails.contains(email) ? '/admin' : '/home';
+
+                    Navigator.pushReplacementNamed(context, route);
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('$e')));
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Login failed: $e')),
+                      );
+                    }
                   } finally {
                     if (mounted) setState(() => _loading = false);
                   }

@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
 import 'pages/tips_education.dart';
-
+import 'pages/admin_dashboard.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -24,7 +24,8 @@ class EcoApp extends StatelessWidget {
       // 👇 具名路由（named routes）
       routes: {
         '/':      (_) => const LoginPage(),      // 默认显示登录
-        '/home':  (_) =>  TipsEducationScreen()  // 登录成功后跳这里
+        '/home':  (_) =>  TipsEducationScreen(),  // 登录成功后跳这里
+        '/admin': (_) => AdminDashboardScreen()
       },
     );
   }
