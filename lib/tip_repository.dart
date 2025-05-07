@@ -1,17 +1,41 @@
-import '../pages/tips_education.dart'; // 引入 Tip model
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../pages/tips_education.dart';   // Tip model
 
 class TipRepository {
   TipRepository._();
   static final TipRepository instance = TipRepository._();
 
-
+  /* ---------- Local cache ---------- */
   final List<Tip> tips = [..._seedTips];
 
-  void addTip(Tip tip) => tips.add(tip);
+  /* ---------- Firestore handle ---------- */
+  final _tipsCol =
+  FirebaseFirestore.instance.collection('EcoLife').doc('tips').collection('items');
+
+  /// Loads tips from Firestore once (call from `main()` or `initState`)
+  Future<void> initFromFirestore() async {
+    try {
+      final snap = await _tipsCol.get();
+      if (snap.docs.isNotEmpty) {
+        tips
+          ..clear()
+          ..addAll(snap.docs.map((d) => Tip.fromDoc(d)));
+      }
+    } catch (e) {
+
+    }
+  }
+
+  /// Add a tip: write to Firestore first, then cache & notify
+  Future<void> addTip(Tip tip) async {
+    try {
+      await _tipsCol.add(tip.toJson());
+    } finally {
+      // even if write fails, still add locally so admin sees it
+      tips.add(tip);
+    }
+  }
 }
-
-
 final List<Tip> _seedTips = [
   Tip(
     title: 'Use LED Bulbs',

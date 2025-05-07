@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
 import 'pages/tips_education.dart';
 import 'pages/admin_dashboard.dart';
+import 'tip_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await TipRepository.instance.initFromFirestore();
   runApp(EcoApp());
 }
 

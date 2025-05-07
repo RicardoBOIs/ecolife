@@ -4,19 +4,35 @@ import 'package:ecolife/firestore_service.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ecolife/tip_repository.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
 String _selectedRegion = 'MY';
 
-class Tip {
-  final String title;
-  final String subtitle;
-  final String reference;
 
+
+class Tip {
+  final String title, subtitle, reference;
   Tip({required this.title, required this.subtitle, required this.reference});
+
+  factory Tip.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final d = doc.data()!;
+    return Tip(
+      title: d['title'] ?? '',
+      subtitle: d['subtitle'] ?? '',
+      reference: d['reference'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'subtitle': subtitle,
+    'reference': reference,
+    'createdAt': FieldValue.serverTimestamp(),
+  };
 }
+
 
 final Map<String, Map<String, double>> _emissionFactors = {
 
@@ -72,7 +88,7 @@ class _TipsEducationScreenState extends State<TipsEducationScreen> {
   final _vegKgCtrl  = TextEditingController();      // NEW
   final _waterLCtrl = TextEditingController();      // NEW
   final _wasteKgCtrl= TextEditingController();      // NEW
-  final TextEditingController _milesController = TextEditingController();
+  final TextEditingController    _milesController = TextEditingController();
   final TextEditingController _energyController = TextEditingController();
   double? _carbonFootprint;
 
