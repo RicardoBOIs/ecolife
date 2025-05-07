@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ecolife/tip_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'database/CarbonFootPrintDao.dart';
 
 
 String _selectedRegion = 'MY';
@@ -338,7 +340,10 @@ class _TipsEducationScreenState extends State<TipsEducationScreen> {
                   onPressed: () async {
                     _calculateCarbonFootprint();
                     await FirestoreService().saveDailyFootprint(_carbonFootprint! * 1000);
-
+                    final user = FirebaseAuth.instance.currentUser;
+                    final today   = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    if (user == null) return;
+                    await FootprintDao().upsert(user.email!, today, _carbonFootprint! * 1000);
                   },
                   child: const Text('Calculate'),
                 ),

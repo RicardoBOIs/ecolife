@@ -3,6 +3,7 @@ import '../auth_service.dart';
 import '../widgets/fancy_button.dart';
 import 'reset_page.dart';
 import 'package:ecolife/firestore_service.dart';
+import 'database/UserDao.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -118,15 +119,23 @@ class _RegisterPageState extends State<RegisterPage> {
                       password: _pwd.text,
                     );
 
-                    // 更新显示名
+
                     await authService.value.updateUsername(
                         username: _username.text.trim());
 
                     await FirestoreService().saveUserProfile(
                       username: _username.text,
-                      phone: _phone.text,
+                      phone:_phone.text,
                       location: _location.text,
                     );
+
+                    await UserDao().EnsureUser(
+                      email: _mail.text.trim(),
+                      username: _username.text,
+                      phone: _phone.text,
+                      location: _location.text
+                    );
+
 
                     if (mounted) {
                       Navigator.pushReplacementNamed(context, '/home');

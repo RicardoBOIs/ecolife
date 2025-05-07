@@ -3,6 +3,8 @@ import '../auth_service.dart';
 import '../widgets/fancy_button.dart';
 import 'register_page.dart';
 import 'reset_page.dart';
+import 'database/UserDao.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 const adminEmails = ['admin@example.com', 'johnleeyenhan@gmail.com'];
 
@@ -64,6 +66,25 @@ class _LoginPageState extends State<LoginPage> {
                     if (!mounted) return;
                     final email = _mail.text.trim();
                     final route = adminEmails.contains(email) ? '/admin' : '/home';
+
+                    final snap = await FirebaseFirestore.instance
+                        .collection('EcoLife')
+                        .doc('users')
+                        .collection('profiles')
+                        .doc(_mail.text.trim())
+                        .get();
+
+                    // Use empty string if not data from firestore
+                    final data = snap.data() ?? {};
+
+                    await UserDao().EnsureUser(
+                      email: _mail.text.trim(),
+                      username: data['username'] ?? '',
+                      phone: data['phone'] ?? '',
+                      location: data['location'] ?? '',
+                    );
+
+
 
                     Navigator.pushReplacementNamed(context, route);
                   } catch (e) {
