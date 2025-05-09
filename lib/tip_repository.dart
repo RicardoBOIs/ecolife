@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../pages/tips_education.dart';   // Tip model
 
+
 class TipRepository {
   TipRepository._();
   static final TipRepository instance = TipRepository._();
 
+
   /* ---------- Local cache ---------- */
-  final List<Tip> tips = [..._seedTips];
+  final List<Tip> tips = [];
 
   /* ---------- Firestore handle ---------- */
   final _tipsCol =
@@ -29,13 +31,29 @@ class TipRepository {
   /// Add a tip: write to Firestore first, then cache & notify
   Future<void> addTip(Tip tip) async {
     try {
-      await _tipsCol.add(tip.toJson());
+      await _tipsCol.doc(tip.title).set((tip.toJson()));
+
     } finally {
-      // even if write fails, still add locally so admin sees it
+
       tips.add(tip);
     }
   }
+
+  Future<bool> deleteTip(String titleId) async {
+    try {
+      // Delete from Firestore
+      await _tipsCol.doc(titleId).delete();
+
+
+
+      return true;
+    } catch (e) {
+      print('Error deleting tip: $e');
+      return false;
+    }
+  }
 }
+
 final List<Tip> _seedTips = [
   Tip(
     title: 'Use LED Bulbs',

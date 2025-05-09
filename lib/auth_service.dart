@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 ValueNotifier<AuthService> authService = ValueNotifier(AuthService());
 class AuthService{
@@ -14,6 +15,23 @@ class AuthService{
     required String password,
   }) async {
     return await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  Future<UserCredential?> loginWithGoogle() async{
+    try{
+      final googleUser = await GoogleSignIn().signIn();
+
+      final googleAuth= await googleUser?.authentication;
+
+      final cred=GoogleAuthProvider.credential(
+          idToken:googleAuth?.idToken,accessToken: googleAuth?.accessToken
+      );
+
+      return await firebaseAuth.signInWithCredential(cred);
+    } catch(e){
+      print(e.toString());
+    }
+    return null;
   }
 
   Future<UserCredential> createAccount({

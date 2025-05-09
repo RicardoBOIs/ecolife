@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'CarbonFootprint.dart';
-import 'pages/tips_education.dart';
+
 
 class FirestoreService {
   final _db = FirebaseFirestore.instance;
@@ -32,19 +32,9 @@ class FirestoreService {
 
 
   }
-  //Save tips for admin
-  Future<void> saveTip(Tip tip) async {
-    await _db
-        .collection('EcoLife')
-        .doc('tips')
-        .collection('items')
-        .add({
-      'title': tip.title,
-      'subtitle': tip.subtitle,
-      'reference': tip.reference,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-  }
+
+
+
 
   // Update and Save user profile
   Future<void> saveUserProfile({

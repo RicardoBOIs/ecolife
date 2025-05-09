@@ -1,50 +1,38 @@
 import 'package:flutter/material.dart';
 
-class FancyButton extends StatefulWidget {
-  const FancyButton({super.key, required this.text, required this.onTap});
+class FancyButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
+  final Color color;
 
-  @override
-  State<FancyButton> createState() => _FancyButtonState();
-}
-
-class _FancyButtonState extends State<FancyButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 300),
-    lowerBound: 0.0,
-    upperBound: 0.1,
-  );
+  const FancyButton({
+    Key? key,
+    required this.text,
+    required this.onTap,
+    this.color = const Color(0xFF4CAF50), // Default to primary green
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _ctrl.forward(),
-      onTapUp: (_) {
-        _ctrl.reverse();
-        widget.onTap();
-      },
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: 1 - _ctrl.value,
-            child: child,
-          );
-        },
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(12),
+      color: color,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.green.shade700,
-            borderRadius: BorderRadius.circular(12),
-          ),
           child: Center(
-            child: Text(widget.text,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
